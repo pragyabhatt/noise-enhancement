@@ -1,0 +1,11 @@
+{
+    "id": 160,
+    "split": "train",
+    "noisy_path": "train\\noisy_0160.wav",
+    "ref_path": "train\\ref_0160.wav",
+    "snr": 11.33,
+    "noise_primary": "wind",
+    "noise_secondary": "none",
+    "codec": "amr",
+    "seed": 1160
+}

@@ -1,0 +1,11 @@
+{
+    "id": 515,
+    "split": "val",
+    "noisy_path": "val\\noisy_0515.wav",
+    "ref_path": "val\\ref_0515.wav",
+    "snr": 2.28,
+    "noise_primary": "crowd",
+    "noise_secondary": "none",
+    "codec": "amr",
+    "seed": 2015
+}

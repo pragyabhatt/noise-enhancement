@@ -1,0 +1,11 @@
+{
+    "id": 521,
+    "split": "val",
+    "noisy_path": "val\\noisy_0521.wav",
+    "ref_path": "val\\ref_0521.wav",
+    "snr": 4.31,
+    "noise_primary": "wind",
+    "noise_secondary": "none",
+    "codec": "amr",
+    "seed": 2021
+}

@@ -1,0 +1,11 @@
+{
+    "id": 508,
+    "split": "val",
+    "noisy_path": "val\\noisy_0508.wav",
+    "ref_path": "val\\ref_0508.wav",
+    "snr": 1.94,
+    "noise_primary": "engine",
+    "noise_secondary": "none",
+    "codec": "g711_a",
+    "seed": 2008
+}

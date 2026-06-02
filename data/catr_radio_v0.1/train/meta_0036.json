@@ -1,0 +1,11 @@
+{
+    "id": 36,
+    "split": "train",
+    "noisy_path": "train\\noisy_0036.wav",
+    "ref_path": "train\\ref_0036.wav",
+    "snr": 5.97,
+    "noise_primary": "crowd",
+    "noise_secondary": "none",
+    "codec": "g711_mu",
+    "seed": 1036
+}

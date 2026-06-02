@@ -1,0 +1,11 @@
+{
+    "id": 578,
+    "split": "val",
+    "noisy_path": "val\\noisy_0578.wav",
+    "ref_path": "val\\ref_0578.wav",
+    "snr": 10.83,
+    "noise_primary": "rotor",
+    "noise_secondary": "none",
+    "codec": "amr",
+    "seed": 2078
+}

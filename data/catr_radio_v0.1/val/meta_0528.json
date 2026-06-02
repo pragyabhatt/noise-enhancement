@@ -1,0 +1,11 @@
+{
+    "id": 528,
+    "split": "val",
+    "noisy_path": "val\\noisy_0528.wav",
+    "ref_path": "val\\ref_0528.wav",
+    "snr": 4.96,
+    "noise_primary": "wind",
+    "noise_secondary": "none",
+    "codec": "g711_mu",
+    "seed": 2028
+}

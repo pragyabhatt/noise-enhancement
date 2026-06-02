@@ -1,0 +1,11 @@
+{
+    "id": 381,
+    "split": "train",
+    "noisy_path": "train\\noisy_0381.wav",
+    "ref_path": "train\\ref_0381.wav",
+    "snr": 11.6,
+    "noise_primary": "rotor",
+    "noise_secondary": "none",
+    "codec": "amr",
+    "seed": 1381
+}

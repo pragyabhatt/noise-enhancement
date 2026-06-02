@@ -1,0 +1,11 @@
+{
+    "id": 502,
+    "split": "val",
+    "noisy_path": "val\\noisy_0502.wav",
+    "ref_path": "val\\ref_0502.wav",
+    "snr": 1.44,
+    "noise_primary": "wind",
+    "noise_secondary": "none",
+    "codec": "amr",
+    "seed": 2002
+}

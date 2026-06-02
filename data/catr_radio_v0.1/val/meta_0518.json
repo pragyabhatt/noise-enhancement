@@ -1,0 +1,11 @@
+{
+    "id": 518,
+    "split": "val",
+    "noisy_path": "val\\noisy_0518.wav",
+    "ref_path": "val\\ref_0518.wav",
+    "snr": 13.56,
+    "noise_primary": "engine",
+    "noise_secondary": "none",
+    "codec": "g711_mu",
+    "seed": 2018
+}

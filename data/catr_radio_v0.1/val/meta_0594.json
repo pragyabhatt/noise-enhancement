@@ -1,0 +1,11 @@
+{
+    "id": 594,
+    "split": "val",
+    "noisy_path": "val\\noisy_0594.wav",
+    "ref_path": "val\\ref_0594.wav",
+    "snr": 12.24,
+    "noise_primary": "engine",
+    "noise_secondary": "none",
+    "codec": "g711_mu",
+    "seed": 2094
+}

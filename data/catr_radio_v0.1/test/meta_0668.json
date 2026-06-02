@@ -1,0 +1,11 @@
+{
+    "id": 668,
+    "split": "test",
+    "noisy_path": "test\\noisy_0668.wav",
+    "ref_path": "test\\ref_0668.wav",
+    "snr": 11.78,
+    "noise_primary": "wind",
+    "noise_secondary": "none",
+    "codec": "g711_mu",
+    "seed": 3068
+}

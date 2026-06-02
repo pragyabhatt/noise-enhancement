@@ -1,0 +1,11 @@
+{
+    "id": 623,
+    "split": "test",
+    "noisy_path": "test\\noisy_0623.wav",
+    "ref_path": "test\\ref_0623.wav",
+    "snr": 11.93,
+    "noise_primary": "crowd",
+    "noise_secondary": "none",
+    "codec": "g711_mu",
+    "seed": 3023
+}

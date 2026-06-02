@@ -1,0 +1,11 @@
+{
+    "id": 554,
+    "split": "val",
+    "noisy_path": "val\\noisy_0554.wav",
+    "ref_path": "val\\ref_0554.wav",
+    "snr": 8.75,
+    "noise_primary": "rotor",
+    "noise_secondary": "none",
+    "codec": "g711_a",
+    "seed": 2054
+}

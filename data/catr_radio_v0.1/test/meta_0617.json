@@ -1,0 +1,11 @@
+{
+    "id": 617,
+    "split": "test",
+    "noisy_path": "test\\noisy_0617.wav",
+    "ref_path": "test\\ref_0617.wav",
+    "snr": 2.82,
+    "noise_primary": "engine",
+    "noise_secondary": "none",
+    "codec": "amr",
+    "seed": 3017
+}

@@ -1,0 +1,11 @@
+{
+    "id": 638,
+    "split": "test",
+    "noisy_path": "test\\noisy_0638.wav",
+    "ref_path": "test\\ref_0638.wav",
+    "snr": 13.06,
+    "noise_primary": "rotor",
+    "noise_secondary": "none",
+    "codec": "g711_mu",
+    "seed": 3038
+}

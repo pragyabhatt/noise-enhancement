@@ -1,0 +1,11 @@
+{
+    "id": 509,
+    "split": "val",
+    "noisy_path": "val\\noisy_0509.wav",
+    "ref_path": "val\\ref_0509.wav",
+    "snr": 10.06,
+    "noise_primary": "rotor",
+    "noise_secondary": "none",
+    "codec": "g711_mu",
+    "seed": 2009
+}

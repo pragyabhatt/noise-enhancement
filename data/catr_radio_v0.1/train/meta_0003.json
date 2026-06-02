@@ -1,0 +1,11 @@
+{
+    "id": 3,
+    "split": "train",
+    "noisy_path": "train\\noisy_0003.wav",
+    "ref_path": "train\\ref_0003.wav",
+    "snr": 10.05,
+    "noise_primary": "static",
+    "noise_secondary": "none",
+    "codec": "amr",
+    "seed": 1003
+}

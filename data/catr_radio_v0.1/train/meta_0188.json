@@ -1,0 +1,11 @@
+{
+    "id": 188,
+    "split": "train",
+    "noisy_path": "train\\noisy_0188.wav",
+    "ref_path": "train\\ref_0188.wav",
+    "snr": 3.15,
+    "noise_primary": "engine",
+    "noise_secondary": "none",
+    "codec": "g711_a",
+    "seed": 1188
+}

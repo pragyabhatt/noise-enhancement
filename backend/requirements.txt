@@ -1,0 +1,15 @@
+fastapi
+uvicorn[standard]
+python-multipart
+sqlalchemy
+aiosqlite
+pydantic-settings
+pyjwt
+passlib[bcrypt]
+numpy
+scipy
+onnxruntime
+cryptography
+webrtcvad-py; platform_system != "Windows"  # webrtcvad can be hard to compile on Windows
+pystoi
+pesq; platform_system != "Windows"          # pesq can be hard to compile on Windows

@@ -1,0 +1,11 @@
+{
+    "id": 506,
+    "split": "val",
+    "noisy_path": "val\\noisy_0506.wav",
+    "ref_path": "val\\ref_0506.wav",
+    "snr": -3.76,
+    "noise_primary": "engine",
+    "noise_secondary": "none",
+    "codec": "amr",
+    "seed": 2006
+}

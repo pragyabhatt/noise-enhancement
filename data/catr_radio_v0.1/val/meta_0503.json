@@ -1,0 +1,11 @@
+{
+    "id": 503,
+    "split": "val",
+    "noisy_path": "val\\noisy_0503.wav",
+    "ref_path": "val\\ref_0503.wav",
+    "snr": 11.81,
+    "noise_primary": "wind",
+    "noise_secondary": "none",
+    "codec": "g711_a",
+    "seed": 2003
+}
