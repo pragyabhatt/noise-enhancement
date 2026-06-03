@@ -12,7 +12,7 @@ const Login: React.FC = () => {
     e.preventDefault();
     try {
       // Simple POST to /auth/login (backend already implements JWT login)
-      const resp = await axios.post('/auth/login', user);
+      const resp = await axios.post('/api/auth/login', new URLSearchParams(user as any).toString(), { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } });
       if (resp.data.access_token) {
         localStorage.setItem('token', resp.data.access_token);
         navigate('/dashboard');

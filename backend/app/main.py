@@ -13,6 +13,7 @@ from .api import auth, admin, process, metrics, eval, audit
 
 # Database initialisation utilities
 from .db import database
+from .db.connection import engine
 
 
 def create_app() -> FastAPI:
@@ -27,6 +28,15 @@ def create_app() -> FastAPI:
         title="DEAL Audio Quality Assessment Dashboard",
         description="Air‑gapped speech‑enhancement and evaluation service",
         version="0.1.0",
+    )
+    # Enable CORS for development (allow all origins)
+    from fastapi.middleware.cors import CORSMiddleware
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=["*"],
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
     )
 
     # Register API routers under appropriate prefixes
