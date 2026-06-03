@@ -1,40 +1,47 @@
-import React, { useState } from 'react';
+// src/pages/Login.tsx
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { login } from '../api/client';
-import { useAuth } from '../hooks/useAuth';
+import axios from 'axios';
 
 const Login: React.FC = () => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
-  const { setUser } = useAuth();
+  const [error, setError] = React.useState<string>('');
+  const [user, setUser] = React.useState({ username: '', password: '' });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await login(username, password);
-      setUser(response.user);
-      navigate('/');
+      // Simple POST to /auth/login (backend already implements JWT login)
+      const resp = await axios.post('/auth/login', user);
+      if (resp.data.access_token) {
+        localStorage.setItem('token', resp.data.access_token);
+        navigate('/dashboard');
+      }
     } catch (err: any) {
       setError(err?.response?.data?.detail || 'Login failed');
     }
   };
 
   return (
-    <div className="container">
+    <div className="page login-page">
       <h2>Login</h2>
-      {error && <div className="card" style={{ background: 'var(--color-danger)' }}>{error}</div>}
-      <form onSubmit={handleSubmit} className="card">
-        <div>
-          <label>Username</label>
-          <input value={username} onChange={e => setUsername(e.target.value)} required />
-        </div>
-        <div>
-          <label>Password</label>
-          <input type="password" value={password} onChange={e => setPassword(e.target.value)} required />
-        </div>
-        <button type="submit">Login</button>
+      {error && <div className="error">{error}</div>}
+      <form onSubmit={handleSubmit} className="login-form">
+        <input
+          type="text"
+          placeholder="Username"
+          value={user.username}
+          onChange={(e) => setUser({ ...user, username: e.target.value })}
+          required
+        />
+        <input
+          type="password"
+          placeholder="Password"
+          value={user.password}
+          onChange={(e) => setUser({ ...user, password: e.target.value })}
+          required
+        />
+        <button type="submit">Sign In</button>
       </form>
     </div>
   );
