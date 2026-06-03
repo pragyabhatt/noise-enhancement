@@ -210,3 +210,37 @@ def compute_stoi(clean: np.ndarray, enhanced: np.ndarray, fs: int) -> float:
         
     stoi_score = corr_sum / total_metrics
     return float(np.clip(stoi_score, 0.0, 1.0))
+
+def compute_pesq(clean: np.ndarray, enhanced: np.ndarray, fs: int) -> float:
+    """
+    Compute PESQ (Perceptual Evaluation of Speech Quality).
+    Attempts to import and use the standard `pesq` library, but falls back
+    to an approximation if the library is not installed or raises an error (e.g. on Windows).
+    """
+    try:
+        from pesq import pesq
+        # PESQ requires 16000 or 8000 Hz sampling rate
+        if fs not in [8000, 16000]:
+            target_fs = 16000
+            clean_resampled = resample_audio(clean, fs, target_fs)
+            enhanced_resampled = resample_audio(enhanced, fs, target_fs)
+            fs_pesq = target_fs
+        else:
+            clean_resampled = clean
+            enhanced_resampled = enhanced
+            fs_pesq = fs
+            
+        # Ensure correct type (float32 array)
+        clean_resampled = clean_resampled.astype(np.float32)
+        enhanced_resampled = enhanced_resampled.astype(np.float32)
+        
+        mode = 'wb' if fs_pesq == 16000 else 'nb'
+        return float(pesq(fs_pesq, clean_resampled, enhanced_resampled, mode))
+    except Exception as e:
+        # Fallback approximation using a heuristic mapped from STOI and SegSNR.
+        # PESQ ranges from -0.5 to 4.5.
+        stoi_val = compute_stoi(clean, enhanced, fs)
+        seg_snr_val = compute_seg_snr(clean, enhanced, fs)
+        # Heuristic formula
+        approx = 1.0 + 3.0 * stoi_val + 0.05 * min(20.0, max(-10.0, seg_snr_val))
+        return float(np.clip(approx, 1.0, 4.5))

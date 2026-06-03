@@ -6,18 +6,60 @@ import Evaluation from './pages/Evaluation';
 import Benchmarks from './pages/Benchmarks';
 import Dashboard from './pages/Dashboard';
 import Audit from './pages/Audit';
+import Layout from './components/Layout';
+
+// Simple private route wrapper
+const PrivateRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const token = localStorage.getItem('token');
+  return token ? <Layout>{children}</Layout> : <Navigate to="/login" replace />;
+};
 
 const App: React.FC = () => {
   return (
     <Router>
       <Routes>
         <Route path="/login" element={<Login />} />
-        <Route path="/process" element={<ProcessFile />} />
-        <Route path="/evaluation" element={<Evaluation />} />
-        <Route path="/benchmarks" element={<Benchmarks />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/audit" element={<Audit />} />
-        <Route path="/" element={<Navigate to="/login" replace />} />
+        <Route
+          path="/process"
+          element={
+            <PrivateRoute>
+              <ProcessFile />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/evaluation"
+          element={
+            <PrivateRoute>
+              <Evaluation />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/benchmarks"
+          element={
+            <PrivateRoute>
+              <Benchmarks />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/dashboard"
+          element={
+            <PrivateRoute>
+              <Dashboard />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/audit"
+          element={
+            <PrivateRoute>
+              <Audit />
+            </PrivateRoute>
+          }
+        />
+        <Route path="/" element={<Navigate to="/dashboard" replace />} />
       </Routes>
     </Router>
   );

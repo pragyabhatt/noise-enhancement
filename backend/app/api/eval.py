@@ -2,6 +2,9 @@ import os
 import json
 import tempfile
 import csv
+import base64
+import logging
+import hashlib
 from typing import List, Dict, Any
 from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, status, Response
 from fastapi.responses import FileResponse
@@ -12,9 +15,12 @@ import numpy as np
 from app.api.auth import get_current_user
 from app.db.database import get_db
 from app.db import crud
-from app.metrics.eval_metrics import compute_seg_snr, compute_stoi, compute_si_sdr
+from app.metrics.eval_metrics import compute_seg_snr, compute_stoi, compute_si_sdr, compute_pesq
+from app.core.pipeline import enhance_audio
 from app.security.crypto import encrypt_file, decrypt_file
 from app.config import settings
+
+logger = logging.getLogger("eval_api")
 
 router = APIRouter(prefix="/eval", tags=["Evaluation System"])
 
@@ -27,7 +33,8 @@ async def run_batch_evaluation(
 ) -> Dict[str, Any]:
     """
     Upload batches of noisy WAVs and reference clean WAVs.
-    Computes SegSNR, STOI, and SI-SDR metrics for matched pairs.
+    Runs speech enhancement and computes SegSNR, STOI, SI-SDR, and PESQ comparing enhanced vs clean reference.
+    Returns metrics and base64 encoded enhanced audio.
     """
     # 1. Map reference files by filename for easy matching
     ref_map = {f.filename: f for f in ref_files}
@@ -43,7 +50,6 @@ async def run_batch_evaluation(
             filename = noisy_file.filename
             
             # Find matching clean file
-            # Match rules: exact filename, or replace 'noisy' with 'ref'/'clean'
             matched_ref = None
             possible_names = [
                 filename,
@@ -70,7 +76,6 @@ async def run_batch_evaluation(
             noisy_content = await noisy_file.read()
             ref_content = await matched_ref.read()
             
-            import hashlib
             input_hashes.append(hashlib.sha256(noisy_content).hexdigest())
             
             # Save to temporary paths to read with scipy
@@ -98,17 +103,30 @@ async def run_batch_evaluation(
                 if ref_data.dtype == np.int16:
                     ref_data = ref_data.astype(np.float32) / 32768.0
                     
-                # Calculate metrics
-                seg_snr = compute_seg_snr(ref_data, noisy_data, fs=fs_n)
-                stoi = compute_stoi(ref_data, noisy_data, fs=fs_n)
-                si_sdr = compute_si_sdr(ref_data, noisy_data)
+                # Run speech enhancement
+                enhanced_data = enhance_audio(noisy_data, fs=fs_n)
+                
+                # Save enhanced to temp path to read raw WAV bytes
+                enhanced_temp_path = os.path.join(tmpdir, f"enhanced_{filename}")
+                wavfile.write(enhanced_temp_path, fs_n, enhanced_data.astype(np.float32))
+                with open(enhanced_temp_path, "rb") as f:
+                    enhanced_bytes = f.read()
+                enhanced_b64 = base64.b64encode(enhanced_bytes).decode("utf-8")
+                
+                # Calculate metrics (comparing enhanced with clean reference)
+                seg_snr = compute_seg_snr(ref_data, enhanced_data, fs=fs_n)
+                stoi = compute_stoi(ref_data, enhanced_data, fs=fs_n)
+                si_sdr = compute_si_sdr(ref_data, enhanced_data)
+                pesq = compute_pesq(ref_data, enhanced_data, fs=fs_n)
                 
                 evaluation_results.append({
                     "noisy_filename": filename,
                     "ref_filename": matched_ref.filename,
                     "seg_snr": round(seg_snr, 2),
                     "stoi": round(stoi, 4),
-                    "si_sdr": round(si_sdr, 2)
+                    "si_sdr": round(si_sdr, 2),
+                    "pesq": round(pesq, 2),
+                    "enhanced_audio_base64": enhanced_b64
                 })
             except Exception as e:
                 logger.error(f"Error in batch eval for {filename}: {e}")
@@ -178,14 +196,15 @@ async def export_evaluation_report(
     try:
         with open(temp_csv_path, "w", newline="") as f:
             writer = csv.writer(f)
-            writer.writerow(["Noisy Filename", "Reference Filename", "SegSNR (dB)", "STOI (0-1)", "SI-SDR (dB)"])
+            writer.writerow(["Noisy Filename", "Reference Filename", "SegSNR (dB)", "STOI (0-1)", "SI-SDR (dB)", "PESQ"])
             for row in rows:
                 writer.writerow([
                     row["noisy_filename"],
                     row["ref_filename"],
                     row["seg_snr"],
                     row["stoi"],
-                    row["si_sdr"]
+                    row["si_sdr"],
+                    row.get("pesq", 0.0)
                 ])
                 
         # Read raw CSV data and encrypt it at rest

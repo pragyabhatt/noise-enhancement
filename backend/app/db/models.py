@@ -1,5 +1,5 @@
 import datetime
-from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Text
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Text, Float
 from sqlalchemy.orm import declarative_base, relationship
 
 Base = declarative_base()
@@ -40,6 +40,9 @@ class ProcessingJob(Base):
     output_hash = Column(String, nullable=True)
     model_version = Column(String, nullable=True)
     metrics_json = Column(Text, nullable=True)  # JSON string of SNR, STOI, SI-SDR, confidence, etc.
+    pre_snr_db = Column(Float, nullable=True)
+    post_snr_db = Column(Float, nullable=True)
+    noise_classification = Column(String, nullable=True)
     created_at = Column(DateTime, default=datetime.datetime.utcnow)
 
     # Relationships

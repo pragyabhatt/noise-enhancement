@@ -9,11 +9,11 @@ from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 
 # Import routers defined in the `api` package
-from .api import auth, admin, process, metrics, eval, audit
+from .api import auth, admin, process, metrics, eval, audit, dashboard, benchmark
 
 # Database initialisation utilities
 from .db import database
-from .db.connection import engine
+
 
 
 def create_app() -> FastAPI:
@@ -39,13 +39,16 @@ def create_app() -> FastAPI:
         allow_headers=["*"],
     )
 
-    # Register API routers under appropriate prefixes
-    app.include_router(auth.router, prefix="/auth", tags=["auth"])
-    app.include_router(admin.router, prefix="/admin", tags=["admin"])
-    app.include_router(process.router, prefix="/process", tags=["process"])
-    app.include_router(metrics.router, prefix="/metrics", tags=["metrics"])
-    app.include_router(eval.router, prefix="/eval", tags=["eval"])
-    app.include_router(audit.router, prefix="/audit", tags=["audit"])
+    # Register API routers
+    app.include_router(auth.router, prefix="/api")
+    app.include_router(admin.router, prefix="/api")
+    app.include_router(process.router, prefix="/api")
+    app.include_router(metrics.router, prefix="/api")
+    app.include_router(eval.router, prefix="/api")
+    app.include_router(audit.router, prefix="/api")
+    app.include_router(dashboard.router, prefix="/api")
+    app.include_router(benchmark.router, prefix="/api")
+
 
     # Startup / shutdown events for the async SQLite engine
     @app.on_event("startup")

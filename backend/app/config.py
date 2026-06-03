@@ -2,7 +2,9 @@ import os
 from pydantic_settings import BaseSettings
 
 class Settings(BaseSettings):
-    DATABASE_URL: str = "sqlite+aiosqlite:///./catr_se.db"
+    # Resolve DB path absolutely so it is consistent across execution contexts
+    DATABASE_URL: str = f"sqlite+aiosqlite:///{os.path.abspath(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'catr_se.db'))}"
+
     
     # JWT authentication settings
     JWT_SECRET_KEY: str = "deal_labs_secure_jwt_secret_key_change_in_production"

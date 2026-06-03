@@ -6,6 +6,7 @@ import tempfile
 import hashlib
 from typing import Dict, Any
 from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, BackgroundTasks, Query, status, Response
+from sqlalchemy import select, func
 from sqlalchemy.ext.asyncio import AsyncSession
 from scipy.io import wavfile
 import numpy as np
@@ -376,3 +377,56 @@ async def get_job_status(
         "metrics": metrics,
         "created_at": job.created_at
     }
+
+@router.get("/jobs")
+async def get_jobs_list(
+    limit: int = Query(50, ge=1, le=100, description="Max jobs to return"),
+    offset: int = Query(0, ge=0, description="Pagination offset"),
+    current_user = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db)
+):
+    """
+    List recent audio processing jobs.
+    """
+    allow_operator(current_user)
+    
+    count_query = select(func.count(ProcessingJob.id))
+    count_res = await db.execute(count_query)
+    total_count = count_res.scalar() or 0
+    
+    jobs = await crud.list_processing_jobs(db, limit=limit, offset=offset)
+    
+    result = []
+    for job in jobs:
+        metrics = json.loads(job.metrics_json) if job.metrics_json else None
+        result.append({
+            "job_id": job.id,
+            "status": job.status,
+            "input_filename": job.input_path,
+            "input_hash": job.input_hash,
+            "output_hash": job.output_hash,
+            "model_version": job.model_version,
+            "pre_snr_db": round(job.pre_snr_db, 2) if job.pre_snr_db is not None else None,
+            "post_snr_db": round(job.post_snr_db, 2) if job.post_snr_db is not None else None,
+            "noise_classification": job.noise_classification or "unknown",
+            "metrics": metrics,
+            "created_at": job.created_at
+        })
+        
+    return {
+        "total": total_count,
+        "limit": limit,
+        "offset": offset,
+        "jobs": result
+    }
+
+@router.get("/jobs/{id}/download")
+async def download_job_file_direct(
+    id: int,
+    current_user = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db)
+):
+    """
+    Download the enhanced WAV file directly.
+    """
+    return await get_job_status(id=id, download=True, current_user=current_user, db=db)

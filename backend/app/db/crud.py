@@ -65,7 +65,10 @@ async def update_processing_job(
     output_path: str = None, 
     output_hash: str = None, 
     model_version: str = None, 
-    metrics_json: dict = None
+    metrics_json: dict = None,
+    pre_snr_db: float = None,
+    post_snr_db: float = None,
+    noise_classification: str = None
 ) -> ProcessingJob:
     query = select(ProcessingJob).where(ProcessingJob.id == job_id)
     result = await db.execute(query)
@@ -80,6 +83,19 @@ async def update_processing_job(
             db_job.model_version = model_version
         if metrics_json is not None:
             db_job.metrics_json = json.dumps(metrics_json)
+            # Auto-extract and populate columns
+            if "pre_snr_db" in metrics_json:
+                db_job.pre_snr_db = metrics_json["pre_snr_db"]
+            if "post_snr_db" in metrics_json:
+                db_job.post_snr_db = metrics_json["post_snr_db"]
+            if "noise_class" in metrics_json:
+                db_job.noise_classification = metrics_json["noise_class"]
+        if pre_snr_db is not None:
+            db_job.pre_snr_db = pre_snr_db
+        if post_snr_db is not None:
+            db_job.post_snr_db = post_snr_db
+        if noise_classification is not None:
+            db_job.noise_classification = noise_classification
         await db.commit()
         await db.refresh(db_job)
     return db_job

@@ -13,7 +13,7 @@ from app.security.hashing import verify_password
 
 router = APIRouter(prefix="/auth", tags=["Authentication"])
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/login")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/login")
 
 def create_token(subject: str, role: str, expires_delta: datetime.timedelta, is_refresh: bool = False) -> tuple[str, str]:
     """
