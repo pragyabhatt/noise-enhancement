@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { getDashboardData } from '../api/client';
 import { LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid, BarChart, Bar, AreaChart, Area, ResponsiveContainer } from 'recharts';
+import { useAuth } from '../hooks/useAuth';
 
 interface KPIProps {
   title: string;
@@ -11,11 +12,14 @@ interface KPIProps {
 const KpiCard: React.FC<KPIProps> = ({ title, value, unit }) => (
   <div className="bg-[#1e293b] bg-opacity-80 backdrop-filter backdrop-blur-md p-4 rounded-lg text-center text-[#e0e7ff]">
     <h3 className="text-sm font-medium text-gray-400 mb-1">{title}</h3>
-    <p className="text-2xl font-bold">{value}{unit && <span className="text-sm ml-1">{unit}</span>}</p>
+    <p className="text-2xl font-bold">
+      {value}{unit && <span className="text-sm ml-1">{unit}</span>}
+    </p>
   </div>
 );
 
 const Dashboard: React.FC = () => {
+  const { user } = useAuth();
   const [data, setData] = useState<any>(null);
   const [error, setError] = useState<string>('');
 
@@ -38,6 +42,18 @@ const Dashboard: React.FC = () => {
 
   return (
     <div className="space-y-6">
+      {/* Welcome Header */}
+      <div className="flex items-center justify-between">
+        <h1 className="text-3xl font-bold text-[#e0e7ff]">
+          Welcome, {user?.username || 'User'}
+        </h1>
+        {user?.role && (
+          <span className="px-3 py-1 bg-[#00e5ff] text-[#0f172a] rounded-full text-sm font-medium">
+            {user.role}
+          </span>
+        )}
+      </div>
+
       {/* KPI Cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <KpiCard title="Processed Files" value={kpis.total_processed} />

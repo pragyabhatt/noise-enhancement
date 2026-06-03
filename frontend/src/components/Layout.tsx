@@ -58,7 +58,9 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
           <NavLink to="/process" className={() => navLinkClass('/process')}>Process File</NavLink>
           <NavLink to="/evaluation" className={() => navLinkClass('/evaluation')}>Evaluation</NavLink>
           <NavLink to="/benchmarks" className={() => navLinkClass('/benchmarks')}>Benchmarks</NavLink>
-          <NavLink to="/audit" className={() => navLinkClass('/audit')}>Audit Log</NavLink>
+          {user?.role === 'admin' && (
+            <NavLink to="/audit" className={() => navLinkClass('/audit')}>Audit Log</NavLink>
+          )}
         </nav>
         <div className="mt-auto pt-4 border-t border-gray-600">
           {status ? (

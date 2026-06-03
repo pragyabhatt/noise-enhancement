@@ -11,9 +11,7 @@ export const Toast: React.FC<ToastProps> = ({ message, type = 'info', duration =
   const [visible, setVisible] = useState(true);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setVisible(false);
-    }, duration);
+    const timer = setTimeout(() => setVisible(false), duration);
     return () => clearTimeout(timer);
   }, [duration]);
 
@@ -37,26 +35,20 @@ export const Toast: React.FC<ToastProps> = ({ message, type = 'info', duration =
   );
 };
 
-// Hook to manage a single toast globally
+// Global toast hook
 export let addToastGlobal: ((msg: string, type?: string) => void) | null = null;
 
 export const useToast = () => {
-  const [toast, setToast] = useState<{msg: string; type?: string} | null>(null);
+  const [toast, setToast] = useState<{ msg: string; type?: string } | null>(null);
 
   useEffect(() => {
     addToastGlobal = (msg: string, type: string = 'info') => setToast({ msg, type });
-    return () => {
-      addToastGlobal = null;
-    };
+    return () => { addToastGlobal = null; };
   }, []);
 
   const ToastContainer = () =>
     toast ? (
-      <Toast
-        message={toast.msg}
-        type={toast.type as any}
-        onClose={() => setToast(null)}
-      />
+      <Toast message={toast.msg} type={toast.type as any} onClose={() => setToast(null)} />
     ) : null;
 
   const trigger = (msg: string, type: string = 'info') => {
